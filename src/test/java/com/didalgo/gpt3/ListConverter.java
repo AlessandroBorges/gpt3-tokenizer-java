@@ -10,7 +10,7 @@ public class ListConverter extends SimpleArgumentConverter {
 
     @Override
     protected Object convert(Object source, Class<?> targetType) throws ArgumentConversionException {
-        if (source instanceof String input && List.class.isAssignableFrom(targetType)) {
+        if (source instanceof String input && (List.class.isAssignableFrom(targetType) || targetType == IntArrayList.class)) {
             if (input.startsWith("[") && input.endsWith("]"))
                 input = input.substring(1, input.length() - 1);
 

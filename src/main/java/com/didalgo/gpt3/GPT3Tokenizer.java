@@ -6,16 +6,19 @@
  */
 package com.didalgo.gpt3;
 
-import java.io.ByteArrayOutputStream;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.util.stream.Collectors;
-
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toMap;
+
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Java implementation of the GPT3/4 tokenizer.
@@ -52,11 +55,11 @@ public class GPT3Tokenizer {
         return Pattern.compile(joinedPattern);
     }
 
-    public String decode(List<Integer> tokens) {
+    public String decode(IntArrayList tokens) {
         return decodeImpl(tokens);
     }
 
-    protected String decodeImpl(List<Integer> tokens) {
+    protected String decodeImpl(IntArrayList tokens) {
         ByteArrayOutputStream result = new ByteArrayOutputStream();
 
         for (Integer token : tokens) {
@@ -87,22 +90,22 @@ public class GPT3Tokenizer {
         return pattern;
     }
 
-    public List<Integer> encode(CharSequence text) {
+    public IntArrayList encode(CharSequence text) {
         return encode(text, false);
     }
 
-    public List<Integer> encode(CharSequence text, boolean allowedSpecial) {
+    public IntArrayList encode(CharSequence text, boolean allowedSpecial) {
         return encode(text, allowedSpecial? specialTokensEncoder.keySet() : Set.of());
     }
 
-    public List<Integer> encode(CharSequence text, Set<String> allowedSpecial) {
+    public IntArrayList encode(CharSequence text, Set<String> allowedSpecial) {
         return encodeImpl(text, allowedSpecial);
     }
 
-    protected List<Integer> encodeImpl(CharSequence text, Set<String> allowedSpecial) {
+    protected IntArrayList encodeImpl(CharSequence text, Set<String> allowedSpecial) {
         Pattern specialRegex = getTlSpecialRegex();
         Pattern regex = getTlRegex();
-        List<Integer> ret = new ArrayList<>(text.length() / 4);
+        IntArrayList ret = new IntArrayList(text.length() / 4 + 16);
 
         int start = 0;
         int lastPieceTokenLen = 0;
@@ -174,7 +177,7 @@ public class GPT3Tokenizer {
         }
     };
 
-    protected int bytePairMerge(ByteSequence piece, Collection<Integer> result) {
+    protected int bytePairMerge(ByteSequence piece, IntArrayList result) {
         List<IntPair> parts = new ArrayList<>(piece.length() + 1);
         for (int i = 0; i <= piece.length(); i++) {
             parts.add(new IntPair(i, Integer.MAX_VALUE));

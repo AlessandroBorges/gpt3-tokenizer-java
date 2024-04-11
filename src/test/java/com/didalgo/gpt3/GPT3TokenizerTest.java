@@ -4,7 +4,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.util.List;
+//import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -121,7 +121,7 @@ class GPT3TokenizerTest {
     })
     void can_encode_or_decode_test_vectors_correctly(String model,
                                                      String text,
-                                                     @ConvertWith(ListConverter.class) List<Integer> tokens) {
+                                                     @ConvertWith(ListConverter.class) IntArrayList tokens) {
         var enc = new GPT3Tokenizer(Encoding.forModel(model));
         assertEquals(tokens, enc.encode(text));
         assertEquals(text, enc.decode(tokens));

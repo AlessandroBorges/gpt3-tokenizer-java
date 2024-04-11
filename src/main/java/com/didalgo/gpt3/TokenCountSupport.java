@@ -64,7 +64,9 @@ public class TokenCountSupport {
 
             var content = tokenizable.content();
             if (content != null && role != null && index == 0 && "system".equals(role.toString())) {
-                content += "\n\n" + toolsPrompt;
+                StringBuilder sb = new StringBuilder(content);
+                sb.append("\n\n").append(toolsPrompt);
+                content = sb.toString();
                 toolsPrompt = "";
             }
             if (content != null)
